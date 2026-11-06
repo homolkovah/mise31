@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mise Pavla 31</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Space+Mono:wght@400;700&family=Caveat:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#12152B; --panel:#1B1F3B; --paper:#F2EBDD; --pink:#1B1B22; --txt:#F2EBDD; --soft:#D2D4E6; --muted:#B9BCD6;
+  --yellow:#FFD23F; --red:#E0482F; --line:#33385C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:'Space Mono',ui-monospace,monospace;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font-family:inherit}
+.wrap{max-width:460px;margin:0 auto;min-height:100vh;padding:18px 20px 36px;display:flex;flex-direction:column;gap:18px;position:relative;overflow-x:hidden}
+.top{display:flex;align-items:center;gap:10px}
+.top .lbl{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.dots{display:flex;gap:4px;flex:1}
+.dots i{height:4px;flex:1;background:var(--line)}
+.dots i.on{background:var(--yellow)}
+.dots i.cur{background:var(--red)}
+.iconbtn{width:44px;height:44px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--txt);display:flex;align-items:center;justify-content:center;cursor:pointer}
+h1,h2,.disp{font-family:'Special Elite',ui-monospace,monospace;font-weight:400;margin:0;color:#fff}
+h1{font-size:42px;line-height:1.02}
+h2{font-size:26px;line-height:1.1}
+.hand{font-family:'Special Elite',monospace;color:var(--yellow)}
+p{margin:0;font-size:15px;line-height:1.6;color:var(--soft)}
+.small{font-size:13px;color:var(--muted)}
+.card{background:var(--paper);color:var(--pink);border-radius:6px;padding:18px;box-shadow:0 14px 30px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:12px}
+.card p{color:#3A3630}
+.card .small{color:#5B5546}
+.card h1,.card h2,.card .disp{color:var(--pink)}
+.btn{min-height:56px;border:2px solid var(--yellow);border-radius:4px;background:var(--yellow);color:var(--bg);font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;padding:0 20px;width:100%}
+.btn:disabled{opacity:.4}
+.btn.alt{background:transparent;color:var(--txt);border-color:var(--txt)}
+.card .btn{background:var(--pink);border-color:var(--pink);color:#fff}
+.card .btn.alt{background:transparent;color:var(--pink);border-color:var(--pink)}
+.card .btn.sun,.btn.sun{background:var(--yellow);border-color:var(--pink);color:var(--pink)}
+.link{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;padding:10px;min-height:44px}
+.grow{flex:1}
+.kicker{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow)}
+input.big{width:100%;height:62px;border-radius:4px;border:2px solid var(--pink);background:#fff;font-family:'Special Elite',monospace;font-size:30px;letter-spacing:.3em;text-align:center;text-transform:uppercase;color:var(--pink)}
+textarea{width:100%;min-height:96px;border-radius:4px;border:1px solid #8A8270;background:#FBF7EF;padding:12px;font-size:15px;color:var(--pink);resize:vertical}
+label.lab{font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.msg{min-height:22px;font-weight:700;font-size:14px}
+.msg.bad{color:#FF8A73} .msg.ok{color:#7FE0B5}
+.card .msg.bad{color:#B8321C} .card .msg.ok{color:#1F7A58}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.slots{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.slot{aspect-ratio:3/4;background:#000;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:28px;color:var(--pink)}
+.slot.f{background:var(--paper);border-color:var(--paper)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{min-height:50px;border-radius:4px;border:1px solid #8A8270;background:transparent;font-size:14px;text-align:left;padding:10px 14px;cursor:pointer;color:var(--pink)}
+.opt.bad{border:2px solid #B8321C;background:#F7DCD5}
+.opt.ok{border:2px solid #1F7A58;background:#DDF0E6}
+.instax{background:#fff;padding:12px 12px 44px;box-shadow:0 10px 26px rgba(0,0,0,.35);border-radius:3px;position:relative;width:220px;align-self:center;transform:rotate(-2deg)}
+.instax img,.instax .ph{width:100%;aspect-ratio:46/62;object-fit:cover;display:block;background:#D9CFBC;color:#5B5546}
+.instax .ph{display:flex;align-items:center;justify-content:center}
+.instax .cap{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:var(--pink)}
+.filebtn{position:relative;overflow:hidden}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.th{position:relative;background:#fff;padding:4px 4px 12px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.th img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.th .del{position:absolute;top:-8px;right:-8px;width:32px;height:32px;border-radius:16px;border:none;background:#1B1B22;color:#fff;font-size:18px;cursor:pointer}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.radar{width:280px;height:280px;align-self:center;position:relative}
+.pulse{animation:pulse 2.2s infinite;transform-origin:140px 140px}
+@keyframes pulse{0%{opacity:.6;transform:scale(.3)}100%{opacity:0;transform:scale(1.15)}}
+.dist{font-family:'Space Mono',monospace;font-weight:700;font-size:44px;text-align:center;line-height:1;color:#fff}
+.temp{text-align:center;font-weight:700;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+.dark{background:var(--panel);border:1px solid var(--line);color:#fff;border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.dark p,.dark .small{color:var(--soft)}
+.gamebox{width:100%;border:1px solid var(--line);border-radius:6px;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.gamebox canvas{display:block}
+.sus{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed #C9BFAB}
+.sus:last-of-type{border-bottom:none}
+.sus .n{width:48px;height:60px;flex:none;border:1px dashed #8A8270;display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:22px}
+.sus img{width:48px;height:60px;flex:none;object-fit:cover;border:3px solid #fff;border-bottom-width:8px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.sus .t{flex:1;font-size:14px;font-weight:700}
+.camb{width:48px;height:48px;flex:none;border-radius:4px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mc{aspect-ratio:3/4;border:none;border-radius:4px;cursor:pointer;padding:0;position:relative;background:transparent}
+.mc .face{position:absolute;inset:0;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.mc .back{background:var(--panel);border:1px solid var(--yellow)}
+.mc .front{background:var(--paper);display:none}
+.mc.open .front{display:flex} .mc.open .back{display:none}
+.mc.done .front{background:#DDF0E6}
+.cert{border:2px solid var(--pink);border-radius:4px;background:var(--paper);color:var(--pink);padding:22px;text-align:center;display:flex;flex-direction:column;gap:8px;position:relative;transform:rotate(-1deg);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.cert p{color:#3A3630}
+.cert .small{color:#5B5546}
+.cert .disp{color:var(--pink)}
+.stamp{display:inline-block;border:3px solid var(--red);color:var(--red);font-family:'Special Elite',monospace;font-size:20px;padding:4px 10px;transform:rotate(-12deg);letter-spacing:.06em}
+.statement{font-family:'Special Elite',monospace;font-size:22px;line-height:1.25;text-align:center;padding:8px 0;color:var(--pink)}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.emoji{font-size:54px;text-align:center;letter-spacing:.1em}
+.rk{display:flex;gap:12px;align-items:center}
+.rk img,.rk .ph{width:70px;height:94px;object-fit:cover;border:5px solid #fff;border-bottom-width:14px;box-shadow:0 3px 10px rgba(0,0,0,.25);flex:none;background:#D9CFBC}
+.rk select{flex:1;min-height:48px;border-radius:4px;border:1px solid #8A8270;font-size:14px;padding:0 10px;background:#FBF7EF;color:var(--pink)}
+.rk select.bad{border:2px solid #B8321C} .rk select.ok{border:2px solid #1F7A58}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.sheet{background:var(--bg);border-top:2px solid var(--yellow);width:100%;max-width:460px;border-radius:10px 10px 0 0;padding:22px 20px 30px;display:flex;flex-direction:column;gap:14px;max-height:90vh;overflow:auto}
+.sheet input.big{background:#fff}
+.stage{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.stage .n{width:40px;height:40px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;background:var(--line);color:var(--muted)}
+.stage.done .n{background:var(--yellow);color:var(--bg)}
+.stage.cur .n{background:var(--red);color:#fff}
+.stage .t{font-weight:700}
+.redact{background:#000;color:#000;border-radius:2px;user-select:none}
+.album img{width:100%;border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.dossier{background:var(--paper);color:var(--pink);border-radius:6px;padding:20px 18px 70px;display:flex;flex-direction:column;gap:12px;position:relative;transform:rotate(-1.2deg);box-shadow:0 14px 30px rgba(0,0,0,.35);margin-top:12px}
+.dossier .tab{position:absolute;top:-12px;left:24px;width:92px;height:24px;background:#D9CFBC;border-radius:4px 4px 0 0}
+.dossier .grid{display:grid;grid-template-columns:110px 1fr;row-gap:8px;font-size:14px}
+.dossier .grid span:nth-child(odd){color:#5B5546}
+.dossier .grid span:nth-child(even){font-weight:700}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="ov"></div>
+<script>
+/* =========================================================
+   OBSAH HRY – tady se bude všechno upravovat
+   ========================================================= */
+const CONFIG = {
+  jmeno: 'Pavla',
+  osloveni: 'Pavlo',
+  vek: 31,
+  pin: '3131',                 // PIN pro organizátorku
+  heslo: 'TERASA',             // slovo z lístečků po bytě
+  kviz: [                      // cestou na Vyšehrad – každá správná odpověď odkryje písmena tajenky
+    { q: 'Jaký burger si v mekáči dáváme nejčastěji?', opts: ['Big Mac', 'Double Cheeseburger', 'Salát. Jsme přece zdravé.'], ok: 1, pismena: 'VY' },
+    { q: 'Kam vedl náš první společný výlet?', opts: ['Do Paříže (aspoň v mých snech)', 'Do Lidlu a zpátky', 'Do Brna'], ok: 2, pismena: 'ŠE' },
+    { q: 'Co si vždycky vyberu v cukrárně u Michala?', opts: ['Rakvičku', 'Větrník', 'Nic, držím dietu'], ok: 0, pismena: 'HR' },
+    { q: 'Co udělá Pavla jako první, když přijde domů?', opts: ['Zuje se a lehne si na gauč', 'Vypustí holky', 'Otevře lednici a dlouze do ní zírá'], ok: 1, pismena: 'AD' }
+  ],
+  tajenka: 'VYŠEHRAD',
+  vysehrad: {
+    nazev: '[místo prvního rande]',
+    napoveda: 'Tam, kde to mezi námi začalo…',
+    lat: 50.0645, lon: 14.4183, radius: 40
+  },
+  mistoText: 'Archiv ústředí uvádí, že přesně na tomto místě proběhlo první rande. Svědci hlásí nervózní úsměvy, podezřele dlouhé pohledy a nejméně jednu větu, která nedávala vůbec žádný smysl. Případ dodnes nebyl uzavřen. A ústředí doufá, že nikdy nebude.',
+  restaurace: {
+    nazev: 'Mr.HotDoG',
+    napoveda: 'Either you love hot-dogs or you are wrong. Kamenická 24, Praha 7',
+    lat: 50.0999, lon: 14.4239, radius: 50
+  },
+  letna: {
+    nazev: 'Letenské sady',
+    napoveda: 'Odsud je vidět celá Praha a tiká tu obří metronom.',
+    lat: 50.0947, lon: 14.4164, radius: 60
+  },
+  vecereFoto: [                // Dokumentace večeře
+    { key: 'vec0', ukol: 'Tvoje jídlo před prvním soustem', cap: 'Před prvním soustem' },
+    { key: 'vec1', ukol: 'Tvoje jídlo po prvním soustu', cap: 'Po prvním soustu' },
+    { key: 'vecere', ukol: 'Společná fotka u stolu', cap: 'Slavnostní večeře' }
+  ],
+  podezreli: [                 // Sledování podezřelých – foto-honička cestou do restaurace
+    { ukol: 'Něco podezřele červeného', cap: 'Podezřele červené' },
+    { ukol: 'Ceduli nebo nápis s písmenem P', cap: 'Stopa P' },
+    { ukol: 'Nejhezčí výhled na Vltavu', cap: 'Výhled na Vltavu' },
+    { ukol: 'Selfie s tramvají', cap: 'S tramvají' },
+    { ukol: 'Něco, co tě cestou rozesměje', cap: 'K smíchu' }
+  ],
+  pisnicky: [
+    { emoji: '👭⏰⏪', opts: ['Lásko, voníš deštěm', 'Měli jsme se potkat dřív', 'Už je to dávno'], ok: 1, napoveda: 'Marie Rottrová' },
+    { emoji: '💕📖🏰', opts: ['Blank Space', 'Shake It Off', 'Love Story'], ok: 2, napoveda: 'Taylor Swift' },
+    { emoji: '🃏😐', opts: ['Bad Romance', 'Poker Face', 'Shallow'], ok: 1, napoveda: 'Lady Gaga' },
+    { emoji: '🔪🤸‍♀️', opts: ['Měls mě vůbec rád', 'Ticho', 'Na ostří nože'], ok: 2, napoveda: 'Ewa Farna' }
+  ]
+};
+
+const STEPS = [
+  { id: 'uvod', z: 0 }, { id: 'listecky', z: 1 }, { id: 'terasa', z: 1 }, { id: 'skrinka', z: 1 }, { id: 'dort', z: 1 },
+  { id: 'kviz', z: 2 }, { id: 'fotoCesta', z: 2 },
+  { id: 'radarVys', z: 3 }, { id: 'misto', z: 3 }, { id: 'hra', z: 3 }, { id: 'darek1', z: 3 },
+  { id: 'sledovani', z: 4 }, { id: 'radarRest', z: 4 }, { id: 'vecere', z: 5 }, { id: 'radarLetna', z: 6 },
+  { id: 'rekap', z: 6 }, { id: 'pisnicky', z: 6 }, { id: 'darek2', z: 6 }, { id: 'fotoLetna', z: 6 }, { id: 'album', z: 6 }
+];
+const ZAST = ['Start', 'Lístečková stopa', 'Cesta vzpomínek', 'Vyšehrad', 'Cesta za jídlem', 'Večeře', 'Finále'];
+const PHOTO_CAPS = { letna: 'Letná – konec mise', dort: 'Dort na střeše', cesta: 'Cestou na Vyšehrad', rande: 'Tam, kde to začalo', vecere: 'Slavnostní večeře' };
+const REKAP_KEYS = ['dort', 'cesta', 'rande', 'vecere'];
+CONFIG.podezreli.forEach((t, i) => { PHOTO_CAPS['sled' + i] = t.cap; });
+CONFIG.vecereFoto.forEach((t) => { PHOTO_CAPS[t.key] = t.cap; });
+const PHOTO_ORDER = ['dort', 'cesta', 'rande', ...CONFIG.podezreli.map((t, i) => 'sled' + i), 'vec0', 'vec1', 'vecere', 'letna'];
+const MULTI = { cesta: true };
+function photoItems() { // všechny fotky pro album
+  const out = [];
+  PHOTO_ORDER.forEach((k) => { const v = P[k]; if (!v) return; (Array.isArray(v) ? v : [v]).forEach((src) => out.push({ k, src, cap: PHOTO_CAPS[k] })); });
+  return out;
+}
+function photoFirst() { // jedna fotka z každého místa (rekapitulace)
+  return REKAP_KEYS.filter((k) => P[k] && (!Array.isArray(P[k]) || P[k].length)).map((k) => ({ k, src: Array.isArray(P[k]) ? P[k][0] : P[k] }));
+}
+
+/* ---------- ukládání ---------- */
+const KEY = 'bojovka-pavla-31-v1';
+let S;
+function fresh() { return { step: 0, kviz: 0, pv: 0, pvShown: false, song: 0, odpoved: '', vyzva: -1, pexDone: false }; }
+try { S = Object.assign(fresh(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { S = fresh(); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+const P = {}; // fotky v paměti
+let db = null;
+function idb() {
+  return new Promise((res) => {
+    try {
+      const r = indexedDB.open('bojovka-pavla', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('fotky');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => res(null);
+    } catch (e) { res(null); }
+  });
+}
+function idbPut(k, v) { try { if (db) db.transaction('fotky', 'readwrite').objectStore('fotky').put(v, k); } catch (e) {} }
+function idbAll() {
+  return new Promise((res) => {
+    try {
+      if (!db) return res();
+      const st = db.transaction('fotky').objectStore('fotky');
+      const keysReq = st.getAllKeys(), valsReq = st.getAll();
+      valsReq.onsuccess = () => { keysReq.result.forEach((k, i) => P[k] = valsReq.result[i]); res(); };
+      valsReq.onerror = () => res();
+    } catch (e) { res(); }
+  });
+}
+function idbClear() { try { if (db) db.transaction('fotky', 'readwrite').objectStore('fotky').clear(); } catch (e) {} }
+
+/* ---------- pomocné ---------- */
+const $ = (s) => document.querySelector(s);
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const norm = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/\s+/g, '');
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const WRONG = ['Skoro! Ale ne.', 'Hmm… zkus to znovu.', 'Tohle by ti neprošlo ani ve 30.', 'Ne-e. Ale oceňuju snahu.', 'Špatně, ale hezky se tváříš.'];
+const ICON = {
+  map: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
+  lock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  arrow: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  cam: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="4"/></svg>',
+  pin: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>'
+};
+
+function next() { S.step = Math.min(S.step + 1, STEPS.length - 1); save(); render(); window.scrollTo(0, 0); }
+function prev() { S.step = Math.max(S.step - 1, 0); save(); render(); window.scrollTo(0, 0); }
+
+function header() {
+  const z = STEPS[S.step].z;
+  let d = '';
+  for (let i = 1; i <= 6; i++) d += `<i class="${i < z ? 'on' : i === z ? 'cur' : ''}"></i>`;
+  return `<div class="top">
+    <span class="lbl">${z}/6</span><div class="dots">${d}</div>
+    <button class="iconbtn" data-act="map" aria-label="Mapa mise">${ICON.map}</button>
+    <button class="iconbtn" data-act="org" aria-label="Organizátorka">${ICON.lock}</button>
+  </div>`;
+}
+function kicker(t) { return `<div class="kicker">${ICON.pin} ${esc(t)}</div>`; }
+
+function photoBlock(key, prompt) {
+  const has = !!P[key];
+  return `<div class="card">
+    <label class="lab">Fotovýzva</label>
+    <p>${esc(prompt)}</p>
+    <div class="instax">${has ? `<img src="${P[key]}" alt="${esc(PHOTO_CAPS[key])}">` : `<div class="ph">${ICON.cam}</div>`}<div class="cap">${esc(PHOTO_CAPS[key])}</div></div>
+    <label class="btn ${has ? 'alt' : 'sun'} filebtn">${ICON.cam} ${has ? 'Vyfotit znovu' : 'Vyfotit'}
+      <input type="file" accept="image/*" capture="environment" data-photo="${key}" aria-label="Vyfotit">
+    </label>
+  </div>`;
+}
+
+function photoList(list, doneStamp) {
+  const done = list.filter((t) => P[t.key]).length;
+  return `<div class="card">
+    <label class="lab">Zdokumentováno ${done} / ${list.length}</label>
+    ${list.map((t, i) => { const has = !!P[t.key]; return `<div class="sus">
+      ${has ? `<img src="${P[t.key]}" alt="${esc(t.cap)}">` : `<div class="n">${i + 1}</div>`}
+      <div class="t">${esc(t.ukol)}${has ? '<div class="small">Zajištěno</div>' : ''}</div>
+      <label class="camb filebtn" aria-label="Vyfotit: ${esc(t.ukol)}">${ICON.cam}<input type="file" accept="image/*" capture="environment" data-photo="${t.key}"></label>
+    </div>`; }).join('')}
+    ${done === list.length ? `<div style="text-align:center"><span class="stamp" style="font-size:15px">${doneStamp}</span></div>` : ''}
+  </div>`;
+}
+
+function multiPhotoBlock(key, prompt) {
+  const arr = Array.isArray(P[key]) ? P[key] : [];
+  return `<div class="card">
+    <label class="lab">Fotovýzva</label>
+    <p>${esc(prompt)}</p>
+    ${arr.length ? `<div class="thumbs">${arr.map((src, i) => `<div class="th"><img src="${src}" alt="Fotka ${i + 1}"><button class="del" data-act="delphoto" data-k="${key}" data-i="${i}" aria-label="Smazat fotku ${i + 1}">×</button></div>`).join('')}</div>` : `<div class="instax"><div class="ph">${ICON.cam}</div><div class="cap">${esc(PHOTO_CAPS[key])}</div></div>`}
+    <label class="btn ${arr.length ? 'alt' : 'sun'} filebtn">${ICON.cam} ${arr.length ? 'Přidat další fotky' : 'Vyfotit / nahrát fotky'}
+      <input type="file" accept="image/*" multiple data-photo="${key}" aria-label="Přidat fotky">
+    </label>
+  </div>`;
+}
+
+async function shrink(f) {
+  const url = URL.createObjectURL(f);
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+  const max = 1400, sc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.naturalWidth * sc); c.height = Math.round(img.naturalHeight * sc);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  URL.revokeObjectURL(url);
+  return c.toDataURL('image/jpeg', 0.85);
+}
+
+async function handlePhoto(input) {
+  const key = input.dataset.photo;
+  if (MULTI[key]) {
+    const files = Array.from(input.files || []);
+    if (!files.length) return;
+    const arr = Array.isArray(P[key]) ? P[key].slice() : [];
+    for (const f of files) { try { arr.push(await shrink(f)); } catch (e) {} }
+    P[key] = arr; idbPut(key, arr); render(); return;
+  }
+  const f = input.files && input.files[0];
+  if (!f) return;
+  try {
+    P[key] = await shrink(f);
+    idbPut(key, P[key]);
+  } catch (e) { alertBox('Fotku se nepodařilo načíst, zkus to znovu.'); }
+  render();
+}
+
+/* ---------- GPS ---------- */
+let watchId = null;
+function stopWatch() { if (watchId !== null) { try { navigator.geolocation.clearWatch(watchId); } catch (e) {} watchId = null; } }
+function dist(a, b, c, d) {
+  const R = 6371000, r = Math.PI / 180;
+  const x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+function bearing(a, b, c, d) {
+  const r = Math.PI / 180;
+  const y = Math.sin((d - b) * r) * Math.cos(c * r);
+  const x = Math.cos(a * r) * Math.sin(c * r) - Math.sin(a * r) * Math.cos(c * r) * Math.cos((d - b) * r);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+const SMER = ['sever', 'severovýchod', 'východ', 'jihovýchod', 'jih', 'jihozápad', 'západ', 'severozápad'];
+function tempText(m, rad) {
+  if (m <= rad) return ['Jsi tady!', '#2E8B6A'];
+  if (m < 100) return ['Hoří!', '#C93F26'];
+  if (m < 300) return ['Přihořívá…', '#C93F26'];
+  if (m < 1000) return ['Teplo', '#B5651D'];
+  if (m < 3000) return ['Chladno', '#3A3E5C'];
+  return ['Mrzne', '#3A3E5C'];
+}
+function radarScreen(t, title, lead, after) {
+  return `${header()}
+  ${kicker(title)}
+  <h2>${lead}</h2>
+  <div class="dark">
+    <svg class="radar" viewBox="0 0 280 280" role="img" aria-label="Radar">
+      <circle cx="140" cy="140" r="130" fill="none" stroke="#3A3F66" stroke-width="1.5"/>
+      <circle cx="140" cy="140" r="90" fill="none" stroke="#3A3F66" stroke-width="1.5"/>
+      <circle cx="140" cy="140" r="50" fill="none" stroke="#3A3F66" stroke-width="1.5"/>
+      <line x1="140" y1="6" x2="140" y2="274" stroke="#2C3156"/><line x1="6" y1="140" x2="274" y2="140" stroke="#2C3156"/>
+      <text x="140" y="22" fill="#8C90B5" font-size="12" text-anchor="middle" font-family="Space Mono">S</text>
+      <circle class="pulse" cx="140" cy="140" r="130" fill="#FFD23F" opacity=".4"/>
+      <circle cx="140" cy="140" r="8" fill="#FFFFFF"/>
+      <circle id="tgt" cx="140" cy="140" r="9" fill="#FFD23F" style="display:none"/>
+    </svg>
+    <div class="dist" id="dist">— m</div>
+    <div class="temp" id="temp" style="color:#FFC93C">Hledám polohu…</div>
+    <div class="small" id="smer" style="text-align:center"></div>
+  </div>
+  <div id="arrived" style="display:none" class="card"><h2>Jsi na místě!</h2><button class="btn" data-act="next">Odemknout úkol ${ICON.arrow}</button></div>
+  ${after || ''}
+  <div class="card">
+    <button class="btn alt" data-act="hint">Nápověda</button>
+    <p id="hint" style="display:none;font-size:26px" class="hand">${esc(t.napoveda)}</p>
+  </div>
+  <div class="grow"></div>
+  <button class="link" data-act="next">GPS nefunguje? Jsem na místě</button>`;
+}
+function startRadar(t) {
+  stopWatch();
+  const show = (msg) => { const el = $('#temp'); if (el) { el.textContent = msg; el.style.color = '#FFC93C'; } };
+  if (!navigator.geolocation) return show('Poloha není k dispozici. Použij tlačítko dole.');
+  try {
+    watchId = navigator.geolocation.watchPosition((pos) => {
+      const { latitude: la, longitude: lo } = pos.coords;
+      const m = dist(la, lo, t.lat, t.lon), b = bearing(la, lo, t.lat, t.lon);
+      const [txt, col] = tempText(m, t.radius);
+      if (!$('#dist')) return;
+      $('#dist').textContent = m >= 1000 ? (m / 1000).toFixed(1).replace('.', ',') + ' km' : Math.round(m) + ' m';
+      $('#temp').textContent = txt; $('#temp').style.color = col === '#3A3E5C' ? '#BFC3E6' : (col === '#2E8B6A' ? '#7FE0B5' : '#FFC93C');
+      $('#smer').textContent = m > t.radius ? 'Cíl je směrem na ' + SMER[Math.round(b / 45) % 8] : '';
+      const rr = Math.min(122, 18 + Math.log10(Math.max(m, 1)) * 28), a = (b - 90) * Math.PI / 180;
+      const tg = $('#tgt'); tg.style.display = ''; tg.setAttribute('cx', 140 + rr * Math.cos(a)); tg.setAttribute('cy', 140 + rr * Math.sin(a));
+      if (m <= t.radius) $('#arrived').style.display = '';
+    }, () => show('Poloha není k dispozici. Použij tlačítko dole.'), { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
+  } catch (e) { show('Poloha není k dispozici. Použij tlačítko dole.'); }
+}
+
+/* ---------- ponožky ---------- */
+const SOCKS = [
+  { bg: '#C93F26', c: '#FFFFFF', p: 'stripes' }, { bg: '#1E2240', c: '#FFC93C', p: 'dots' },
+  { bg: '#FFC93C', c: '#1E2240', p: 'stripes' }, { bg: '#2E8B6A', c: '#FFFFFF', p: 'dots' },
+  { bg: '#F59FB4', c: '#C93F26', p: 'zig' }, { bg: '#7A9CF0', c: '#1E2240', p: 'zig' },
+  { bg: '#FFFFFF', c: '#C93F26', p: 'dots' }, { bg: '#8A5CC2', c: '#FFC93C', p: 'stripes' }
+];
+function sockSvg(i, uid) {
+  const s = SOCKS[i], id = 'pt' + uid;
+  let pat = '';
+  if (s.p === 'stripes') pat = `<pattern id="${id}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="${s.bg}"/><rect width="10" height="4" fill="${s.c}"/></pattern>`;
+  if (s.p === 'dots') pat = `<pattern id="${id}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="${s.bg}"/><circle cx="5" cy="5" r="2.2" fill="${s.c}"/></pattern>`;
+  if (s.p === 'zig') pat = `<pattern id="${id}" width="12" height="10" patternUnits="userSpaceOnUse"><rect width="12" height="10" fill="${s.bg}"/><path d="M0 7 L3 3 L6 7 L9 3 L12 7" fill="none" stroke="${s.c}" stroke-width="2"/></pattern>`;
+  return `<svg viewBox="0 0 60 80" width="80%" height="80%" aria-hidden="true"><defs>${pat}</defs>
+    <path d="M20 6 H42 V44 L52 54 C58 60 56 74 44 74 H28 C20 74 14 70 10 64 L6 58 C2 52 4 46 10 42 L20 34 Z" fill="url(#${id})" stroke="#1E2240" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="20" y="6" width="22" height="9" fill="#FFFFFF" stroke="#1E2240" stroke-width="2.5"/></svg>`;
+}
+
+/* ---------- ponožková hra ---------- */
+const GAME_GOAL = 10;
+let G = null;
+function stopGame() { if (G) { cancelAnimationFrame(G.raf); G = null; } }
+function sockPath(ctx, x, y, s, col, stripe) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  const p = new Path2D('M20 6 H42 V44 L52 54 C58 60 56 74 44 74 H28 C20 74 14 70 10 64 L6 58 C2 52 4 46 10 42 L20 34 Z');
+  ctx.fillStyle = col; ctx.fill(p);
+  ctx.save(); ctx.clip(p); ctx.fillStyle = stripe; for (let yy = 18; yy < 80; yy += 12) ctx.fillRect(0, yy, 60, 5); ctx.restore();
+  ctx.lineWidth = 3; ctx.strokeStyle = '#1B1B22'; ctx.stroke(p);
+  ctx.fillStyle = '#FFFFFF'; ctx.fillRect(20, 6, 22, 9); ctx.strokeRect(20, 6, 22, 9);
+  ctx.restore();
+}
+function startGame() {
+  stopGame();
+  const cv = $('#game'); if (!cv) return;
+  const box = cv.parentElement, W = box.clientWidth, H = 260, dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  const x = cv.getContext('2d'); x.scale(dpr, dpr);
+  const GROUND = H - 40;
+  G = { raf: 0, last: 0, t: 0, running: false, won: !!S.hraHotovo, socks: S.hraHotovo ? GAME_GOAL : 0, speed: 230,
+        p: { x: 46, y: GROUND, vy: 0, w: 26, h: 44, jumps: 0 }, obs: [], items: [], nextObs: 1.2, nextItem: 0.6, hurt: 0, flash: '', flashT: 0,
+        stars: Array.from({ length: 30 }, () => [Math.random() * W, Math.random() * (GROUND - 60)]) ,
+        city: Array.from({ length: 14 }, (_, i) => [i * 46, 30 + Math.random() * 60]), cityX: 0 };
+  const colors = [['#E0482F', '#FFFFFF'], ['#FFD23F', '#1B1B22'], ['#7A9CF0', '#12152B'], ['#2E8B6A', '#F2EBDD'], ['#F59FB4', '#E0482F']];
+  const jump = () => {
+    if (G.won) return;
+    if (!G.running) { G.running = true; return; }
+    if (G.p.jumps < 2) { G.p.vy = G.p.jumps === 0 ? -560 : -470; G.p.jumps++; }
+  };
+  cv.onpointerdown = (e) => { e.preventDefault(); jump(); };
+  const jb = $('#jumpbtn'); if (jb) jb.onpointerdown = (e) => { e.preventDefault(); jump(); };
+  const hit = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y - a.h < b.y && a.y > b.y - b.h;
+  function step(ts) {
+    if (!G) return;
+    const dt = Math.min(0.05, G.last ? (ts - G.last) / 1000 : 0); G.last = ts;
+    const p = G.p;
+    if (G.running && !G.won) {
+      G.t += dt; G.speed = Math.min(420, 230 + G.t * 6);
+      p.vy += 1500 * dt; p.y += p.vy * dt;
+      if (p.y >= GROUND) { p.y = GROUND; p.vy = 0; p.jumps = 0; }
+      G.nextObs -= dt; G.nextItem -= dt;
+      if (G.nextObs <= 0) {
+        const tall = Math.random() < 0.4;
+        G.obs.push({ x: W + 10, y: GROUND, w: tall ? 18 : 30, h: tall ? 36 : 22, kind: tall ? 'cone' : 'case' });
+        G.nextObs = 1.0 + Math.random() * 1.3;
+      }
+      if (G.nextItem <= 0) {
+        const c = colors[Math.floor(Math.random() * colors.length)];
+        G.items.push({ x: W + 10, y: GROUND - 20 - Math.random() * 110, w: 22, h: 28, c });
+        G.nextItem = 0.7 + Math.random() * 1.0;
+      }
+      G.obs.forEach((o) => o.x -= G.speed * dt); G.items.forEach((o) => o.x -= G.speed * dt);
+      G.obs = G.obs.filter((o) => o.x > -40); G.items = G.items.filter((o) => o.x > -40 && !o.got);
+      const pb = { x: p.x + 4, y: p.y, w: p.w - 8, h: p.h - 4 };
+      G.items.forEach((o) => { if (hit(pb, o)) { o.got = true; G.socks++; G.flash = '+1'; G.flashT = 0.6; } });
+      if (G.hurt > 0) G.hurt -= dt;
+      else G.obs.forEach((o) => { if (!o.hitDone && hit(pb, o)) { o.hitDone = true; G.hurt = 1.2; G.socks = Math.max(0, G.socks - 2); G.flash = 'Au! −2'; G.flashT = 0.9; } });
+      G.cityX = (G.cityX - G.speed * 0.25 * dt) % 46;
+      if (G.socks >= GAME_GOAL) { G.won = true; S.hraHotovo = true; save(); setTimeout(() => render(), 900); }
+    }
+    if (G.flashT > 0) G.flashT -= dt;
+    // kreslení
+    x.fillStyle = '#12152B'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#33385C'; G.stars.forEach(([sx, sy]) => x.fillRect(sx, sy, 2, 2));
+    x.fillStyle = '#1B1F3B';
+    G.city.forEach(([cx0, ch], i) => { const cx = (cx0 + G.cityX + W * 2) % (W + 46) - 46; x.fillRect(cx, GROUND - ch, 40, ch); if (i % 4 === 0) { x.beginPath(); x.moveTo(cx + 8, GROUND - ch); x.lineTo(cx + 20, GROUND - ch - 30); x.lineTo(cx + 32, GROUND - ch); x.fill(); } });
+    x.strokeStyle = '#B9BCD6'; x.lineWidth = 2; x.setLineDash([10, 8]); x.beginPath(); x.moveTo(0, GROUND + 2); x.lineTo(W, GROUND + 2); x.stroke(); x.setLineDash([]);
+    G.items.forEach((o) => sockPath(x, o.x - 2, o.y - o.h - 2, 0.42, o.c[0], o.c[1]));
+    G.obs.forEach((o) => {
+      if (o.kind === 'cone') { x.fillStyle = '#E0482F'; x.beginPath(); x.moveTo(o.x, o.y); x.lineTo(o.x + o.w / 2, o.y - o.h); x.lineTo(o.x + o.w, o.y); x.fill(); x.fillStyle = '#FFFFFF'; x.fillRect(o.x + 4, o.y - o.h * 0.5, o.w - 8, 4); }
+      else { x.fillStyle = '#C9A46A'; x.fillRect(o.x, o.y - o.h, o.w, o.h); x.fillStyle = '#1B1B22'; x.fillRect(o.x + o.w / 2 - 5, o.y - o.h - 5, 10, 5); x.fillRect(o.x, o.y - o.h / 2, o.w, 2); }
+    });
+    // agentka
+    if (!(G.hurt > 0 && Math.floor(G.hurt * 10) % 2)) {
+      const px = p.x, py = p.y, run = G.running && p.y >= GROUND ? Math.sin(G.t * 22) * 6 : 0;
+      x.strokeStyle = '#1B1B22'; x.lineWidth = 4; x.lineCap = 'round';
+      x.beginPath(); x.moveTo(px + 9, py - 12); x.lineTo(px + 9 + run, py); x.moveTo(px + 17, py - 12); x.lineTo(px + 17 - run, py); x.stroke();
+      x.fillStyle = '#C9A46A'; x.beginPath(); x.moveTo(px + 3, py - 10); x.lineTo(px + 6, py - 32); x.lineTo(px + 20, py - 32); x.lineTo(px + 23, py - 10); x.closePath(); x.fill();
+      x.fillStyle = '#1B1B22'; x.fillRect(px + 5, py - 22, 16, 2.5);
+      x.fillStyle = '#F2C9A0'; x.beginPath(); x.arc(px + 13, py - 38, 7, 0, 7); x.fill();
+      x.fillStyle = '#1B1B22'; x.fillRect(px + 9, py - 40, 10, 3);
+      x.fillRect(px + 3, py - 45, 20, 3); x.fillRect(px + 7, py - 52, 12, 8);
+      x.fillStyle = '#E0482F'; x.fillRect(px + 7, py - 46, 12, 2);
+    }
+    // ukazatel
+    x.fillStyle = '#FFD23F'; x.font = '700 15px "Space Mono", monospace'; x.textAlign = 'left';
+    x.fillText('Ponožky: ' + G.socks + ' / ' + GAME_GOAL, 12, 24);
+    sockPath(x, W - 34, 8, 0.36, '#E0482F', '#FFFFFF');
+    if (G.flashT > 0) { x.fillStyle = G.flash.startsWith('Au') ? '#FF8A73' : '#7FE0B5'; x.font = '700 18px "Space Mono", monospace'; x.fillText(G.flash, p.x + 30, p.y - 56); }
+    if (!G.running && !G.won) { x.fillStyle = 'rgba(18,21,43,.75)'; x.fillRect(0, 0, W, H); x.fillStyle = '#F2EBDD'; x.textAlign = 'center'; x.font = '700 18px "Space Mono", monospace'; x.fillText('Klepni pro start', W / 2, H / 2); }
+    if (G.won) { x.fillStyle = 'rgba(18,21,43,.8)'; x.fillRect(0, 0, W, H); x.fillStyle = '#FFD23F'; x.textAlign = 'center'; x.font = '26px "Special Elite", monospace'; x.fillText('5 PÁRŮ ZAJIŠTĚNO', W / 2, H / 2); return; }
+    G.raf = requestAnimationFrame(step);
+  }
+  G.raf = requestAnimationFrame(step);
+}
+
+/* ---------- obrazovky ---------- */
+const SCR = {
+  uvod: () => `
+    <div style="display:flex;justify-content:space-between;font-size:12px;letter-spacing:.14em;color:var(--muted)"><span>OPERACE ${CONFIG.vek}</span><span>${new Date().toLocaleDateString('cs-CZ')}</span></div>
+    <div style="margin-top:22px">
+      <div class="kicker">Agentka</div>
+      <h1 style="font-size:76px;line-height:.95;margin-top:4px">${esc(CONFIG.jmeno.toUpperCase())}</h1>
+    </div>
+    <div class="dossier">
+      <div class="tab"></div>
+      <div style="font-family:'Special Elite',monospace;font-size:20px;border-bottom:1px dashed #8A8270;padding-bottom:8px">SPIS Č. ${CONFIG.vek}</div>
+      <div class="grid">
+        <span>Krycí jméno</span><span>Oslavenkyně</span>
+        <span>Věk</span><span>${CONFIG.vek} (údajně)</span>
+        <span>Úkol</span><span>Přežít den plný překvapení</span>
+        <span>Cíl</span><span><span class="redact">██████████</span></span>
+      </div>
+      <div class="stamp" style="position:absolute;right:18px;bottom:16px;opacity:.9">PŘÍSNĚ TAJNÉ</div>
+    </div>
+    <p style="margin-top:8px">Agentko, ústředí zjistilo, že ti dnes je ${CONFIG.vek}. Situace je vážná, ale ne beznadějná. Čeká tě série úkolů a pár překvapení. Odstoupit od mise nelze, už je všechno zaplacené.</p>
+    <div class="grow"></div>
+    <button class="btn" data-act="next">Převzít misi ${ICON.arrow}</button>
+    <div class="small" style="text-align:center;letter-spacing:.06em">Lísteček z květiny si nech, ještě se bude hodit.</div>`,
+
+  listecky: () => `${header()}
+    ${kicker('Doma')}
+    <h1>Lístečková stopa</h1>
+    <p>Na lístečku z květiny je první písmeno a na zadní straně hádanka. Ta tě dovede k dalšímu lístečku. Posbírej všech 6 písmen a slož z nich heslo.</p>
+    <div class="slots">${CONFIG.heslo.split('').map(() => '<div class="slot"></div>').join('')}</div>
+    <div class="card">
+      <label class="lab" for="heslo">Slovo z lístečků</label>
+      <input id="heslo" class="big" maxlength="${CONFIG.heslo.length}" autocomplete="off" autocapitalize="characters">
+      <div class="msg" id="m"></div>
+      <button class="btn" data-act="heslo">Odemknout</button>
+    </div>`,
+
+  terasa: () => `${header()}
+    ${kicker('Doma')}
+    <div><span class="stamp">HESLO PŘIJATO</span></div>
+    <h1>Další stopa je o pár pater výš</h1>
+    <p>Agentko, ústředí potvrzuje: přesuň se do 5. patra na terasu. Výtah je povolen, schody jsou pro agentky, které chtějí začít ${CONFIG.vek}. rok sportovně.</p>
+    <div class="grow"></div>
+    <button class="btn" data-act="next">Jsem na terase ${ICON.arrow}</button>`,
+
+  skrinka: () => `${header()}
+    ${kicker('Terasa')}
+    <h1>Pátrání na terase</h1>
+    <p>Agentko, podle našich informací byl na terase ukryt podezřelý předmět. Je schovaný v jedné ze skříněk. Prohledej terasu, ale nenápadně.</p>
+    <div class="grow"></div>
+    <button class="btn" data-act="next">Našla jsem ho! ${ICON.arrow}</button>`,
+
+  dort: () => `${header()}
+    ${kicker('Terasa')}
+    <h1>Důkazní materiál č. 1</h1>
+    <p>Předmět zajištěn. Je kulatý, sladký a hoří na něm svíčky. Před zneškodněním ho zdokumentuj: vyfoť se s ním. Sfouknutí svíček je povinné.</p>
+    ${photoBlock('dort', 'Vyfoť se s dortem.')}
+    <button class="btn" data-act="next">${P.dort ? 'Pokračovat' : 'Pokračovat bez fotky'} ${ICON.arrow}</button>`,
+
+  kviz: () => {
+    const done = S.kviz >= CONFIG.kviz.length;
+    let shown = '';
+    CONFIG.kviz.slice(0, S.kviz).forEach((k) => shown += k.pismena);
+    const letters = CONFIG.tajenka.split('');
+    const slots = `<div class="slots" style="grid-template-columns:repeat(${letters.length},1fr)">${letters.map((l, i) => `<div class="slot ${i < shown.length ? 'f' : ''}" style="font-size:22px">${i < shown.length ? l : ''}</div>`).join('')}</div>`;
+    if (done) return `${header()}${kicker('Cesta vzpomínek')}<h1>Tajenka je kompletní</h1>${slots}
+      <p>Víš, kam jedeme. Místo, kde to všechno začalo.</p><div class="grow"></div><button class="btn" data-act="next">Jedeme ${ICON.arrow}</button>`;
+    const k = CONFIG.kviz[S.kviz];
+    return `${header()}${kicker('Cesta vzpomínek')}
+      <h2>Výslech: kvíz o nás</h2><p class="small">Otázka ${S.kviz + 1} z ${CONFIG.kviz.length}. Každá správná odpověď odkryje kus tajenky.</p>
+      ${slots}
+      <div class="card"><div class="statement" style="text-align:left">${esc(k.q)}</div>
+      <div class="opts">${k.opts.map((o, i) => `<button class="opt" data-act="kviz" data-i="${i}">${esc(o)}</button>`).join('')}</div>
+      <div class="msg" id="m"></div></div>`;
+  },
+
+  fotoCesta: () => `${header()}${kicker('Cesta vzpomínek')}
+    <h1>Hlášení z cesty</h1>
+    <p>Ústředí vyžaduje průběžnou dokumentaci. Cestou na Vyšehrad pořizuj fotky: selfie, výhledy, podezřelé holuby. Čím víc, tím líp.</p>
+    ${multiPhotoBlock('cesta', 'Fotky můžeš přidávat průběžně. Až dorazíte, pokračuj.')}
+    <button class="btn" data-act="next">${(P.cesta && P.cesta.length) ? 'Jsme tam, pokračovat' : 'Pokračovat bez fotek'} ${ICON.arrow}</button>`,
+
+  radarVys: () => radarScreen(CONFIG.vysehrad, 'Vyšehrad', 'Najdi to místo'),
+
+  misto: () => `${header()}${kicker('Vyšehrad')}
+    <h1 style="font-size:46px">Tady to začalo.</h1>
+    <div class="card"><label class="lab">Z archivu ústředí</label><p>${esc(CONFIG.mistoText)}</p></div>
+    ${photoBlock('rande', 'Selfie na místě našeho prvního rande.')}
+    <button class="btn" data-act="next">Pokračovat ${ICON.arrow}</button>`,
+
+  hra: () => {
+    const won = S.hraHotovo;
+    return `${header()}${kicker('Vyšehrad')}
+      <h1>Ponožková honička</h1>
+      <p>Agentko, po Vyšehradě se rozutekly ponožky. Posbírej jich ${GAME_GOAL}. Klepnutím skáčeš, dvojitým klepnutím skočíš ještě výš. Pozor na překážky, při nárazu ti dvě ponožky utečou.</p>
+      <div class="gamebox"><canvas id="game" aria-label="Hra: sbírej ponožky, klepnutím skákej"></canvas></div>
+      ${won ? `<div class="card"><p style="font-weight:700">Tady to začalo. A od té doby jsme pár, skoro tak dokonalý jako ponožky. Skoro. Protože ponožky se aspoň neztrácí… počkat.</p>
+        <button class="btn" data-act="next">Pokračovat ${ICON.arrow}</button></div>` : `<button class="btn" id="jumpbtn">Skok</button>`}`;
+  },
+
+  darek1: () => `${header()}${kicker('Vyšehrad')}
+    <div class="cert">
+      <div class="small" style="letter-spacing:.14em;text-transform:uppercase;font-weight:700">Oficiální certifikát</div><div><span class="stamp" style="font-size:16px">OVĚŘENO</span></div>
+      <div class="disp" style="font-size:34px;font-weight:800">${esc(CONFIG.jmeno)}, ${CONFIG.vek} let</div>
+      <p>Tímto se potvrzuje, že držitelka dosáhla věku, kdy se člověk upřímně a bez ironie raduje z ponožek.</p>
+      <div class="disp" style="font-size:24px">Gratulujeme!</div>
+    </div>
+    <div class="dark"><h2>Dárek č. 1</h2><p>Teď si o svůj první dárek řekni.</p></div>
+    <div class="grow"></div>
+    <button class="btn" data-act="next">Mám ho! Pokračovat ${ICON.arrow}</button>`,
+
+  vecere: () => `${header()}${kicker(CONFIG.restaurace.nazev)}
+    <h1>Dokumentace večeře</h1>
+    <p>Agentko, ústředí potřebuje důkaz, že mise zahrnovala i jídlo. Zdokumentuj průběh večeře. Na fotkách se smí jíst.</p>
+    ${photoList(CONFIG.vecereFoto.map((t) => ({ key: t.key, ukol: t.ukol, cap: t.cap })), 'VEČEŘE ZDOKUMENTOVÁNA')}
+    <button class="btn" data-act="next">Jsme najedené ${ICON.arrow}</button>`,
+
+  sledovani: () => {
+    const list = CONFIG.podezreli.map((t, i) => ({ key: 'sled' + i, ukol: t.ukol, cap: t.cap }));
+    const all = list.every((t) => P[t.key]);
+    return `${header()}${kicker('Cesta za jídlem')}
+    <h1>Sledování podezřelých</h1>
+    <p>Agentko, cestou na další stanoviště zdokumentuj tyto podezřelé objekty. Ústředí potřebuje důkazy, ideálně ostré.</p>
+    ${photoList(list, 'VŠICHNI ZDOKUMENTOVÁNI')}
+    <button class="btn" data-act="next">${all ? 'Pokračovat' : 'Pokračovat i tak'} ${ICON.arrow}</button>`;
+  },
+
+  radarLetna: () => radarScreen(CONFIG.letna, 'Poslední zastávka', 'Agentko, mise ještě nekončí'),
+
+  fotoLetna: () => `${header()}${kicker('Letenské sady')}
+    <h1>Poslední důkaz</h1>
+    <p>Než ústředí uzavře spis, potřebuje jednu společnou fotku. Praha v pozadí, úsměvy v popředí a nová sluchátka klidně na uších.</p>
+    ${photoBlock('letna', 'Společná fotka s výhledem na Prahu.')}
+    <button class="btn" data-act="next">${P.letna ? 'Uzavřít spis' : 'Uzavřít spis bez fotky'} ${ICON.arrow}</button>`,
+
+  radarRest: () => radarScreen(CONFIG.restaurace, 'Cesta za jídlem', 'Kde se dnes večeří?'),
+
+  rekap: () => {
+    const items = photoFirst();
+    if (!items.length) return `${header()}${kicker('Letenské sady')}<h1>Rekapitulace dne</h1>
+      <p>Dnes nevznikla žádná fotka. Odvážné! Ale album bude prázdné…</p><div class="grow"></div><button class="btn" data-act="next">Pokračovat ${ICON.arrow}</button>`;
+    const caps = REKAP_KEYS.map((k) => PHOTO_CAPS[k]);
+    return `${header()}${kicker('Letenské sady')}<h1>Rekapitulace dne</h1>
+      <p>Přiřaď ke každé fotce, kde vznikla.</p>
+      <div class="card">${items.map(({ k, src }) => `<div class="rk"><img src="${src}" alt=""><select data-k="${k}" aria-label="Kde vznikla fotka"><option value="">Vyber…</option>${caps.map((c) => `<option>${esc(c)}</option>`).join('')}</select></div>`).join('')}
+      <div class="msg" id="m"></div><button class="btn" data-act="rekap">Zkontrolovat</button></div>`;
+  },
+
+  pisnicky: () => {
+    const sg = CONFIG.pisnicky;
+    if (S.song >= sg.length) return `${header()}${kicker('Letenské sady')}<h1>Všechny uhodnuté!</h1>
+      <p>Na hudbu máš ucho. A to ucho si zaslouží něco pořádného.</p><div class="grow"></div><button class="btn" data-act="next">Pokračovat ${ICON.arrow}</button>`;
+    const s = sg[S.song];
+    return `${header()}${kicker('Letenské sady')}<h1>Hádej písničku</h1><p class="small">Písnička ${S.song + 1} z ${sg.length}</p>
+      <div class="card"><div class="emoji" role="img" aria-label="Emoji hádanka">${s.emoji}</div>${s.napoveda ? `<div class="small" style="text-align:center">Interpret: ${esc(s.napoveda)}</div>` : ''}
+      <div class="opts">${s.opts.map((o, i) => `<button class="opt" data-act="song" data-i="${i}">${esc(o)}</button>`).join('')}</div><div class="msg" id="m"></div></div>`;
+  },
+
+  darek2: () => `${header()}${kicker('Letenské sady')}
+    <div class="grow"></div>
+    <p style="font-size:20px;color:#fff">Na tohle budeš potřebovat něco pořádného do uší.</p>
+    <h1 style="font-size:84px">Otoč se.</h1>
+    <div class="grow"></div>
+    <button class="btn" data-act="next">Mám je! ${ICON.arrow}</button>`,
+
+  album: () => `${header()}${kicker('Konec mise')}
+    <div><span class="stamp">MISE SPLNĚNA</span></div>
+    <h1>Nástěnka vyšetřování</h1><p>Všechny důkazy z celého dne na jednom místě:</p>
+    <div class="album" id="album"><p class="small">Skládám album…</p></div>
+    <button class="btn" data-act="save" id="savebtn" style="display:none">Uložit nástěnku</button>
+    <p class="small" id="savehint">Můžeš taky podržet prst na obrázku a uložit si ho.</p>
+    <div class="msg" id="m"></div>`
+};
+
+/* ---------- album ---------- */
+async function buildAlbum() {
+  const items = photoItems();
+  const W = 1560, M = 50;
+  try { await Promise.all([document.fonts.load('60px "Special Elite"'), document.fonts.load('700 56px Caveat'), document.fonts.load('700 30px "Space Mono"'), document.fonts.load('30px "Space Mono"')]); } catch (e) {}
+  const imgs = await Promise.all(items.map((it) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = it.src; })));
+  let seed = 31; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  // ---- rozvržení ----
+  const colW = 330, colX = [0, 1, 2, 3].map((i) => M + i * (colW + 30));
+  const HEAD = 250;
+  const mapBox = { x: M + 10, y: HEAD + 20, w: 2 * colW + 20, h: 960 };
+  const placed = [];
+  const cols = [mapBox.y + mapBox.h + 40, mapBox.y + mapBox.h + 40, HEAD + 20, HEAD + 20];
+  const put = (h, kind, extra) => {
+    let c = 0; for (let i = 1; i < cols.length; i++) if (cols[i] < cols[c]) c = i;
+    const o = Object.assign({ x: colX[c], y: cols[c], w: colW, h, kind, rot: (rnd() - 0.5) * 7 }, extra);
+    cols[c] += h + 34; placed.push(o); return o;
+  };
+  // poznámky k úkolům
+  const sledDone = CONFIG.podezreli.filter((t, i) => P['sled' + i]).length;
+  put(330, 'note', { lines: [
+    ['Lístečková stopa', 'TERASA'], ['Dort', 'zajištěn'], ['Výslech', 'splněno'], ['Ponožky', '5 párů'],
+    ['Podezřelí', sledDone + ' / ' + CONFIG.podezreli.length], ['Písničky', CONFIG.pisnicky.length + ' / ' + CONFIG.pisnicky.length], ['Dárky', '2 předány']
+  ] });
+  put(230, 'sticky');
+  const PH = Math.round((colW - 24) * 62 / 46) + 70;
+  items.forEach((it, i) => put(PH, 'photo', { it, img: imgs[i] }));
+  const H = Math.max(...cols) + 90;
+
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+
+  // ---- korek ----
+  x.fillStyle = '#A97C50'; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < W * H / 260; i++) {
+    x.fillStyle = rnd() < 0.5 ? 'rgba(80,50,20,.22)' : 'rgba(230,190,140,.22)';
+    x.fillRect(rnd() * W, rnd() * H, 2 + rnd() * 3, 2 + rnd() * 3);
+  }
+  x.strokeStyle = '#6B4A2B'; x.lineWidth = 18; x.strokeRect(9, 9, W - 18, H - 18);
+
+  const shadow = (on) => { if (on) { x.shadowColor = 'rgba(0,0,0,.4)'; x.shadowBlur = 18; x.shadowOffsetY = 8; } else { x.shadowColor = 'transparent'; x.shadowBlur = 0; x.shadowOffsetY = 0; } };
+  const pins = [];
+  const pin = (px, py, col) => {
+    x.save(); shadow(true); x.fillStyle = col; x.beginPath(); x.arc(px, py, 13, 0, 7); x.fill(); shadow(false);
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.beginPath(); x.arc(px - 4, py - 4, 4, 0, 7); x.fill(); x.restore();
+  };
+  const fitText = (t, maxW, size, font) => { let s = size; x.font = font.replace('{s}', s); while (x.measureText(t).width > maxW && s > 18) { s -= 2; x.font = font.replace('{s}', s); } };
+
+  // ---- hlavička ----
+  x.save(); x.translate(W / 2, 135); x.rotate(-0.012);
+  const hw = W / 2 - 70; shadow(true); x.fillStyle = '#F2EBDD'; x.fillRect(-hw, -85, 2 * hw, 170); shadow(false);
+  x.fillStyle = '#1B1B22'; x.textAlign = 'left';
+  x.font = '700 24px "Space Mono", monospace'; x.fillText('SPIS Č. ' + CONFIG.vek + ' · ' + new Date().toLocaleDateString('cs-CZ'), -hw + 30, -40);
+  x.font = '80px "Special Elite", monospace'; x.fillText('OPERACE ' + CONFIG.jmeno.toUpperCase(), -hw + 30, 45);
+  x.restore();
+  x.save(); x.translate(W - 280, 150); x.rotate(-0.2);
+  x.strokeStyle = '#C8361F'; x.lineWidth = 6; x.strokeRect(-150, -38, 300, 70);
+  x.fillStyle = '#C8361F'; x.font = '40px "Special Elite", monospace'; x.textAlign = 'center'; x.fillText('UZAVŘENO', 0, 13);
+  x.restore();
+  pin(90, 62, '#E0482F'); pin(W - 90, 58, '#E0482F');
+
+  // ---- mapa ----
+  const places = [
+    { n: 'Domov – Modřany', lat: 50.0088, lon: 14.4065, side: 1 },
+    { n: 'Vyšehrad', lat: 50.0645, lon: 14.4183, side: 1 },
+    { n: CONFIG.restaurace.nazev, lat: 50.0999, lon: 14.4239, side: 1 },
+    { n: 'Letenské sady', lat: 50.0957, lon: 14.4170, side: -1 }
+  ];
+  const river = [[49.996, 14.402], [50.010, 14.400], [50.022, 14.404], [50.035, 14.410], [50.048, 14.415], [50.058, 14.414], [50.066, 14.411], [50.076, 14.409], [50.083, 14.411], [50.088, 14.410], [50.0925, 14.415], [50.0935, 14.422], [50.0945, 14.430], [50.097, 14.436], [50.103, 14.437], [50.113, 14.433]];
+  const mb = mapBox, pad = 40, top = 90;
+  const LAT0 = 50.112, LAT1 = 49.998, LON0 = 14.382, LON1 = 14.452;
+  const mx = (lon) => mb.x + pad + (lon - LON0) / (LON1 - LON0) * (mb.w - 2 * pad);
+  const my = (lat) => mb.y + top + (LAT0 - lat) / (LAT0 - LAT1) * (mb.h - top - pad);
+  x.save(); x.translate(mb.x + mb.w / 2, mb.y + mb.h / 2); x.rotate(-0.015); x.translate(-(mb.x + mb.w / 2), -(mb.y + mb.h / 2));
+  shadow(true); x.fillStyle = '#EFE7D6'; x.fillRect(mb.x, mb.y, mb.w, mb.h); shadow(false);
+  x.strokeStyle = 'rgba(27,27,34,.08)'; x.lineWidth = 1;
+  for (let gx = mb.x + 20; gx < mb.x + mb.w; gx += 40) { x.beginPath(); x.moveTo(gx, mb.y + top - 20); x.lineTo(gx, mb.y + mb.h - 10); x.stroke(); }
+  for (let gy = mb.y + top - 20; gy < mb.y + mb.h; gy += 40) { x.beginPath(); x.moveTo(mb.x + 10, gy); x.lineTo(mb.x + mb.w - 10, gy); x.stroke(); }
+  x.fillStyle = '#1B1B22'; x.textAlign = 'left'; x.font = '40px "Special Elite", monospace'; x.fillText('MAPA OPERACE', mb.x + 30, mb.y + 60);
+  x.font = '700 18px "Space Mono", monospace'; x.textAlign = 'right'; x.fillText('S ↑', mb.x + mb.w - 30, mb.y + 56);
+  x.lineJoin = 'round'; x.lineCap = 'round';
+  x.strokeStyle = '#9DB9D3'; x.lineWidth = 26; x.beginPath(); river.forEach(([la, lo], i) => i ? x.lineTo(mx(lo), my(la)) : x.moveTo(mx(lo), my(la))); x.stroke();
+  x.strokeStyle = '#B9D0E4'; x.lineWidth = 14; x.stroke();
+  x.save(); x.translate(mx(14.399), my(50.040)); x.rotate(-Math.PI / 2.2); x.fillStyle = '#5E83A6'; x.font = 'italic 20px "Space Mono", monospace'; x.textAlign = 'center'; x.fillText('Vltava', 0, 0); x.restore();
+  x.strokeStyle = '#C8361F'; x.lineWidth = 4; x.setLineDash([12, 9]); x.beginPath();
+  places.forEach((p, i) => i ? x.lineTo(mx(p.lon), my(p.lat)) : x.moveTo(mx(p.lon), my(p.lat))); x.stroke(); x.setLineDash([]);
+  places.forEach((p, i) => {
+    const px = mx(p.lon), py = my(p.lat);
+    x.fillStyle = '#C8361F'; x.beginPath(); x.arc(px, py, 15, 0, 7); x.fill();
+    x.fillStyle = '#FFFFFF'; x.font = '700 17px "Space Mono", monospace'; x.textAlign = 'center'; x.fillText(String(i + 1), px, py + 6);
+    x.font = '700 21px "Space Mono", monospace'; const tw = x.measureText(p.n).width + 20;
+    const lx = p.side > 0 ? px + 24 : px - 24 - tw, ly = py - 16 - (i === 3 ? 26 : 0) + (i === 2 ? -18 : 0);
+    x.fillStyle = '#FFFFFF'; x.fillRect(lx, ly, tw, 32); x.strokeStyle = '#1B1B22'; x.lineWidth = 2; x.strokeRect(lx, ly, tw, 32);
+    x.fillStyle = '#1B1B22'; x.textAlign = 'left'; x.fillText(p.n, lx + 10, ly + 23);
+  });
+  x.restore();
+  pin(mb.x + 30, mb.y + 20, '#FFD23F'); pin(mb.x + mb.w - 30, mb.y + 22, '#FFD23F');
+  const mcx = mb.x + mb.w / 2, mcy = mb.y + mb.h / 2, ra = -0.015;
+  const placePts = places.map((p) => { const dx = mx(p.lon) - mcx, dy = my(p.lat) - mcy; return [mcx + dx * Math.cos(ra) - dy * Math.sin(ra), mcy + dx * Math.sin(ra) + dy * Math.cos(ra) - 30]; });
+  const placeOf = (k) => k === 'dort' ? 0 : (k === 'cesta' || k === 'rande') ? 1 : k === 'letna' ? 3 : 2;
+
+  // ---- karty ----
+  placed.forEach((o) => {
+    const cx = o.x + o.w / 2, cy = o.y + o.h / 2;
+    x.save(); x.translate(cx, cy); x.rotate(o.rot * Math.PI / 180);
+    if (o.kind === 'note') {
+      shadow(true); x.fillStyle = '#FFFFFF'; x.fillRect(-o.w / 2, -o.h / 2, o.w, o.h); shadow(false);
+      x.strokeStyle = '#E0482F'; x.lineWidth = 2; x.beginPath(); x.moveTo(-o.w / 2, -o.h / 2 + 62); x.lineTo(o.w / 2, -o.h / 2 + 62); x.stroke();
+      x.strokeStyle = '#B9D0E4'; x.lineWidth = 1;
+      for (let ly = -o.h / 2 + 96; ly < o.h / 2; ly += 34) { x.beginPath(); x.moveTo(-o.w / 2, ly); x.lineTo(o.w / 2, ly); x.stroke(); }
+      x.fillStyle = '#1B1B22'; x.textAlign = 'left'; x.font = '28px "Special Elite", monospace'; x.fillText('ZÁZNAM Z PŘÍPADU', -o.w / 2 + 18, -o.h / 2 + 52);
+      o.lines.forEach(([a, b], i) => {
+        const yy = -o.h / 2 + 90 + i * 34;
+        x.font = '18px "Space Mono", monospace'; x.textAlign = 'left'; x.fillText(a, -o.w / 2 + 18, yy);
+        x.font = '700 18px "Space Mono", monospace'; x.textAlign = 'right'; x.fillText(b + ' ✓', o.w / 2 - 16, yy);
+      });
+    } else if (o.kind === 'sticky') {
+      shadow(true); x.fillStyle = '#FFE27A'; x.fillRect(-o.w / 2, -o.h / 2, o.w, o.h); shadow(false);
+      x.fillStyle = '#1B1B22'; x.textAlign = 'center'; x.font = '700 46px Caveat, cursive';
+      [['Případ uzavřen.', -30], ['Všechno nejlepší,', 22], [CONFIG.osloveni + '!', 72]].forEach(([t, yy]) => { fitText(t, o.w - 30, 46, '700 {s}px Caveat, cursive'); x.fillText(t, 0, yy); });
+    } else {
+      const pw = o.w - 24, ph = Math.round(pw * 62 / 46);
+      shadow(true); x.fillStyle = '#FFFFFF'; x.fillRect(-o.w / 2, -o.h / 2, o.w, o.h); shadow(false);
+      const px = -pw / 2, py = -o.h / 2 + 12, im = o.img;
+      if (im) { const s = Math.max(pw / im.width, ph / im.height), sw = pw / s, sh = ph / s; x.drawImage(im, (im.width - sw) / 2, (im.height - sh) / 2, sw, sh, px, py, pw, ph); }
+      else { x.fillStyle = '#D9CFBC'; x.fillRect(px, py, pw, ph); }
+      x.fillStyle = '#1B1B22'; x.textAlign = 'center';
+      fitText(o.it.cap, pw - 6, 40, '700 {s}px Caveat, cursive'); x.fillText(o.it.cap, 0, py + ph + 46);
+      const bn = placeOf(o.it.k) + 1;
+      x.fillStyle = '#C8361F'; x.beginPath(); x.arc(pw / 2 - 18, py + 24, 20, 0, 7); x.fill();
+      x.strokeStyle = '#FFFFFF'; x.lineWidth = 3; x.stroke();
+      x.fillStyle = '#FFFFFF'; x.font = '700 22px "Space Mono", monospace'; x.textAlign = 'center'; x.fillText(String(bn), pw / 2 - 18, py + 32);
+    }
+    x.restore();
+    const a = o.rot * Math.PI / 180, ox = o.kind === 'note' ? o.w / 2 - 22 : 0, oy = -o.h / 2 + 16;
+    const pX = cx + ox * Math.cos(a) - oy * Math.sin(a), pY = cy + ox * Math.sin(a) + oy * Math.cos(a);
+    if (o.kind === 'photo') pins.push([pX, pY, placeOf(o.it.k)]);
+    pin(pX, pY, o.kind === 'sticky' ? '#2E8B6A' : (o.kind === 'note' ? '#1B1B22' : '#E0482F'));
+  });
+
+  // ---- červené provázky: fotka → místo na mapě ----
+  x.strokeStyle = 'rgba(200,30,30,.85)'; x.lineWidth = 3; x.lineCap = 'round';
+  pins.forEach(([ax, ay, pi]) => {
+    const [bx, by] = placePts[pi];
+    x.beginPath(); x.moveTo(ax, ay); x.quadraticCurveTo((ax + bx) / 2, Math.max(ay, by) + 50, bx, by); x.stroke();
+  });
+  pins.forEach(([px, py]) => pin(px, py, '#E0482F'));
+  placePts.forEach(([px, py], i) => {
+    if (pins.some((p) => p[2] === i)) pin(px, py, '#E0482F');
+    x.fillStyle = '#C8361F'; x.beginPath(); x.arc(px, py + 30, 15, 0, 7); x.fill();
+    x.fillStyle = '#FFFFFF'; x.font = '700 17px "Space Mono", monospace'; x.textAlign = 'center'; x.fillText(String(i + 1), px, py + 36);
+  });
+
+  if (!items.length) { x.fillStyle = '#F2EBDD'; x.font = '30px "Space Mono", monospace'; x.textAlign = 'center'; x.fillText('Žádné fotky. Agentka byla opravdu nenápadná.', W / 2, H - 50); }
+  return c;
+}
+let albumCanvas = null;
+async function mountAlbum() {
+  albumCanvas = await buildAlbum();
+  const url = albumCanvas.toDataURL('image/jpeg', 0.9);
+  const el = $('#album'); if (!el) return;
+  el.innerHTML = `<img src="${url}" alt="Album dne ve stylu Instax">`;
+  if ($('#savebtn')) $('#savebtn').style.display = '';
+  try {
+    const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+    if (dl) window._dl = dl;
+  } catch (e) {}
+}
+
+/* ---------- překryvy ---------- */
+function closeOv() { $('#ov').innerHTML = ''; }
+function alertBox(t) { $('#ov').innerHTML = `<div class="overlay" data-act="close"><div class="sheet"><p>${esc(t)}</p><button class="btn" data-act="close">OK</button></div></div>`; }
+function mapOv() {
+  const z = STEPS[S.step].z;
+  $('#ov').innerHTML = `<div class="overlay"><div class="sheet"><h2>Mapa mise</h2>
+    ${ZAST.slice(1).map((n, i) => { const k = i + 1; const cls = k < z ? 'done' : k === z ? 'cur' : ''; return `<div class="stage ${cls}"><div class="n">${k}</div><div><div class="t">${k <= z ? esc(n) : '???'}</div><div class="small">${k < z ? 'Splněno' : k === z ? 'Právě tady jsi' : 'Zatím tajné'}</div></div></div>`; }).join('')}
+    <div class="small">Fotek v albu: <b>${photoItems().length}</b></div>
+    <button class="btn" data-act="close">Zavřít</button></div></div>`;
+}
+function orgOv(unlocked) {
+  $('#ov').innerHTML = `<div class="overlay"><div class="sheet"><h2>Organizátorka</h2>
+    ${unlocked ? `<p class="small">Krok ${S.step + 1} z ${STEPS.length}: ${STEPS[S.step].id}</p>
+      <button class="btn" data-act="orgnext">Přeskočit na další krok</button>
+      <button class="btn alt" data-act="orgprev">O krok zpět</button>
+      <button class="btn alt" data-act="reset">Resetovat celou hru</button>`
+    : `<label class="lab" for="pin">PIN</label><input id="pin" class="big" inputmode="numeric" maxlength="6"><div class="msg bad" id="pm"></div>
+      <button class="btn" data-act="pin">Odemknout</button>`}
+    <button class="link" data-act="close">Zavřít</button></div></div>`;
+}
+
+/* ---------- akce ---------- */
+const ACT = {
+  next: () => next(),
+  map: () => mapOv(),
+  org: () => orgOv(false),
+  close: (el, e) => { if (e.target === el) closeOv(); },
+  pin: () => { if ($('#pin').value === CONFIG.pin) orgOv(true); else $('#pm').textContent = 'Špatný PIN.'; },
+  orgnext: () => { closeOv(); next(); },
+  orgprev: () => { closeOv(); prev(); },
+  reset: () => { S = fresh(); save(); for (const k in P) delete P[k]; idbClear(); closeOv(); render(); },
+  heslo: () => {
+    const v = $('#heslo');
+    if (norm(v.value) === norm(CONFIG.heslo)) next();
+    else { $('#m').className = 'msg bad'; $('#m').textContent = pick(WRONG); v.classList.remove('shake'); void v.offsetWidth; v.classList.add('shake'); }
+  },
+  kviz: (el) => {
+    const k = CONFIG.kviz[S.kviz], i = +el.dataset.i;
+    if (i === k.ok) { el.classList.add('ok'); setTimeout(() => { S.kviz++; save(); render(); }, 600); }
+    else { el.classList.add('bad'); $('#m').className = 'msg bad'; $('#m').textContent = pick(WRONG); }
+  },
+  delphoto: (el) => { const k = el.dataset.k, arr = (P[k] || []).slice(); arr.splice(+el.dataset.i, 1); P[k] = arr; idbPut(k, arr); render(); },
+  hint: () => { const h = $('#hint'); h.style.display = h.style.display === 'none' ? '' : 'none'; h.style.fontSize = '26px'; },
+  rekap: () => {
+    let ok = true;
+    document.querySelectorAll('.rk select').forEach((s) => { const good = s.value === PHOTO_CAPS[s.dataset.k]; s.className = good ? 'ok' : 'bad'; if (!good) ok = false; });
+    if (ok) next(); else { $('#m').className = 'msg bad'; $('#m').textContent = 'Něco nesedí. Vzpomínej!'; }
+  },
+  song: (el) => {
+    const s = CONFIG.pisnicky[S.song], i = +el.dataset.i;
+    if (i === s.ok) { el.classList.add('ok'); setTimeout(() => { S.song++; save(); render(); }, 600); }
+    else { el.classList.add('bad'); $('#m').className = 'msg bad'; $('#m').textContent = pick(['Tohle nehraje.', 'Falešně!', 'Zkus jinou stanici.']); }
+  },
+  save: async () => {
+    if (!albumCanvas) return;
+    const name = 'pavla-31-nastenka.jpg';
+    const ok = () => { $('#m').className = 'msg ok'; $('#m').textContent = 'Hotovo!'; };
+    const fail = () => { $('#m').className = 'msg bad'; $('#m').textContent = 'Uložit se nepodařilo. Podrž prst na obrázku.'; };
+    albumCanvas.toBlob(async (blob) => {
+      if (window._dl) {
+        try { await window._dl.save({ filename: name, data: blob }); ok(); }
+        catch (e) { if (e && e.code !== 'declined') fail(); }
+        return;
+      }
+      try {
+        const file = new File([blob], name, { type: 'image/jpeg' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Album dne' }); ok(); return;
+        }
+      } catch (e) { if (e && e.name === 'AbortError') return; }
+      try {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click(); a.remove(); ok();
+      } catch (e) { fail(); }
+    }, 'image/jpeg', 0.92);
+  }
+};
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const a = el.dataset.act;
+  if (a === 'close' && el.classList.contains('overlay') && e.target !== el) return;
+  if (ACT[a]) ACT[a](el, e);
+});
+document.addEventListener('change', (e) => { if (e.target.matches('input[data-photo]')) handlePhoto(e.target); });
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'heslo') ACT.heslo();
+  if (e.target.id === 'pin') ACT.pin();
+});
+
+function render() {
+  stopWatch(); stopGame();
+  const id = STEPS[S.step].id;
+  $('#app').innerHTML = `<div class="wrap">${SCR[id]()}</div>`;
+  if (id === 'radarVys') startRadar(CONFIG.vysehrad);
+  if (id === 'radarRest') startRadar(CONFIG.restaurace);
+  if (id === 'radarLetna') startRadar(CONFIG.letna);
+  if (id === 'album') mountAlbum();
+  if (id === 'hra') startGame();
+}
+
+(async () => { db = await idb(); await idbAll(); render(); })();
+</script>
+</body>
+</html>
